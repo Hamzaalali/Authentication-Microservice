@@ -1,0 +1,7 @@
+package com.example.authenticationmicroservice.entities;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserTokensRepo extends JpaRepository<UserTokens,Long> {
+    public UserTokens findUserTokensByUser(User user);
+}
