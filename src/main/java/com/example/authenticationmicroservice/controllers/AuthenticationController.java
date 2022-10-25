@@ -1,11 +1,9 @@
 package com.example.authenticationmicroservice.controllers;
 
 import com.example.authenticationmicroservice.entities.User;
-import com.example.authenticationmicroservice.excepotions.EmailAlreadyExistsException;
-import com.example.authenticationmicroservice.excepotions.InvalidRefreshTokenException;
-import com.example.authenticationmicroservice.excepotions.InvalidRoleIdException;
-import com.example.authenticationmicroservice.excepotions.UnauthorizedAccessException;
+import com.example.authenticationmicroservice.excepotions.*;
 import com.example.authenticationmicroservice.requests.LoginRequest;
+import com.example.authenticationmicroservice.requests.LogoutRequest;
 import com.example.authenticationmicroservice.requests.RefreshRequest;
 import com.example.authenticationmicroservice.requests.RegisterRequest;
 import com.example.authenticationmicroservice.services.AuthenticationService;
@@ -16,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -38,5 +37,10 @@ public class AuthenticationController {
     public ResponseEntity<Object> refresh(@Valid @RequestBody RefreshRequest refreshRequest) throws InvalidRefreshTokenException, UnauthorizedAccessException {
         Map<String ,String> accessTokenObject=authenticationService.refresh(refreshRequest.getRefreshToken());
         return new ResponseEntity<>(accessTokenObject,HttpStatus.ACCEPTED);
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(@RequestBody LogoutRequest logoutRequest) throws FailedToLogoutException {
+        authenticationService.logout(logoutRequest.getAccessToken());
+        return new ResponseEntity<>(Collections.emptyList(),HttpStatus.ACCEPTED);
     }
 }
